@@ -13,12 +13,13 @@ export default function Home() {
   //loading till transection mined
   const [loading, setLoading] = useState(false);
   //num of addresses whitelisted
-  const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
+  const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(1);
 
   //connect to metamask persist untill the page open
   const web3ModalRef = useRef();
 
   const getProviderOrSigner = async (needSigner = false) => {
+    
     const provider = await web3ModalRef.current.connect();
     const web3Provider = new providers.Web3Provider(provider);
 
@@ -36,7 +37,7 @@ export default function Home() {
     return web3Provider;
   };
 
-  const addAddressToWhitelist = async () => {
+  const addAddressToWhiteList = async () => {
     try {
       const signer = await getProviderOrSigner(true);
 
@@ -45,7 +46,7 @@ export default function Home() {
         abi,
         signer
       );
-
+        console.log(whitelistContract.address);
       const tx = await whitelistContract.addAddressToWhiteList();
       setLoading(true);
 
@@ -70,6 +71,7 @@ export default function Home() {
       );
 
       const _numOfWhitelisted = await whitelistContract.numOfWhiteListed();
+      console.log(whitelistContract.whitleListAddresses);
 
       setNumberOfWhitelisted(_numOfWhitelisted);
     } catch (err) {
@@ -99,6 +101,7 @@ export default function Home() {
 
   const connectWallet = async () => {
     try {
+      
       await getProviderOrSigner();
       setWalletConnected(true);
 
@@ -117,7 +120,7 @@ export default function Home() {
         return <button className={styles.button}> Loading ...</button>;
       } else {
         return (
-          <button onClick={addAddressToWhitelist} className={styles.button}>
+          <button onClick={addAddressToWhiteList} className={styles.button}>
             Join the Whitelist
           </button>
         );
